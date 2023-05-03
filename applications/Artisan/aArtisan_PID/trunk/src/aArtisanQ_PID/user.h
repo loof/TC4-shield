@@ -20,15 +20,15 @@
 
 ////////////////////
 // Base configurations (leave only one uncommented)
-//#define CONFIG_PWM // slow PWM on OT1 (heater); fast PWM output (3.922kHz) on IO3 (DC fan); ZCD not required
-#define CONFIG_PAC2 // integral cycle control on OT1 (heater) and phase angle control on OT2 (fan); ZCD required on IO2
+#define CONFIG_PWM // slow PWM on OT1 (heater); fast PWM output (3.922kHz) on IO3 (DC fan); ZCD not required
+//define CONFIG_PAC2 // integral cycle control on OT1 (heater) and phase angle control on OT2 (fan); ZCD required on IO2
 //#define CONFIG_PAC2_IO3HTR // fast PWM on IO3 (heater) and phase angle control on OT2 (fan); ZCD required on IO2
 //#define CONFIG_PAC2_IO3FAN // integral cycle control on OT1 (heater) and fast PWM control of IO3 (fan); ZCD required on IO2
 //#define CONFIG_PAC3 // integral cycle control on OT1 (heater) and phase angle control on OT2 (fan); ZCD required on IO3
 
 ////////////////////
 // Temperature Unit
-//#define CELSIUS // controls only the initial conditions.  Comment out for F.
+#define CELSIUS // controls only the initial conditions.  Comment out for F.
 
 ////////////////////
 // LCD Options
@@ -58,8 +58,8 @@
 /////////////////////
 // AC Power Options
 // Needed for CONFIG_PAC options
-#define FREQ60 // 60Hz
-//#define FREQ50 // 50Hz
+//#define FREQ60 // 60Hz
+#define FREQ50 // 50Hz
 
 ////////////////////
 // Thermocouple Input Options
@@ -88,12 +88,12 @@
 ////////////////////
 // Physical input channel for RoR display on LCD
 // Corresponds to Thermocouple inputs T1-T4
-#define ROR_CHAN 1
+#define ROR_CHAN 2
 
 ////////////////////
 // PID Control Options
 #define PID_CONTROL
-#define PID_CHAN 1 // physical channel for PID input (corresponding to thermocouple inputs T1-T4)
+#define PID_CHAN 2 // physical channel for PID input (corresponding to thermocouple inputs T1-T4)
 #define CT 1000 // default cycle time for the PID, in ms
 #define PRO 5.00 // initial proportional parameter
 #define INT 0.15 // initial integral parameter
@@ -106,7 +106,7 @@
 ////////////////////
 // Heater and Fan Limits/Options
 #define MIN_OT1 0 // Set output % for lower limit for OT1.  0% power will always be available
-#define MAX_OT1 100 // Set output % for upper limit for OT1
+#define MAX_OT1 97 // Set output % for upper limit for OT1
 
 #define MIN_OT2 0 // Set output % for lower limit for OT2.  0% power will always be available
 #define MAX_OT2 100 // Set output % for upper limit for OT2
@@ -115,7 +115,7 @@
 #define MAX_IO3 100  // Set output % for upper limit for IO3
 
 // cut power to Heater if fan duty is less than HTR_CUTOFF_FAN_VAL (to protect heater in air roaster). Set to 0 for no cutoff
-#define HTR_CUTOFF_FAN_VAL 0
+#define HTR_CUTOFF_FAN_VAL 50
 
 #define FAN_AUTO_COOL 100 // Set fan output duty for auto cool when using PID;STOP command
 
