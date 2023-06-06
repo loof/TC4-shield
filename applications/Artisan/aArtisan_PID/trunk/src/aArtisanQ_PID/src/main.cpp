@@ -201,7 +201,10 @@ void getProfileDescription(int pn);
 #include <DFRobot_MLX90614.h>
 
 #define MLX90614_I2C_ADDR 0x5A   // mlx9614 default I2C communication address
+
+#if defined USE_IBTS
 DFRobot_MLX90614_I2C sensor(MLX90614_I2C_ADDR, &Wire);   // instantiate an object to drive the sensor
+#endif
 
 
 #if defined LCD_PARALLEL || defined LCDAPTER
@@ -442,10 +445,11 @@ void logger() {
             --k;
             Serial.print(F(","));
             if (k == 2) {
-
+#ifdef USE_IBTS
                 Serial.print(convertUnits(C_TO_F(sensor.getObjectTempCelsius())), DP);
+#endif
             } else {
-                Serial.print(convertUnits(T[k]), DP);
+                Serial.print(convertUnits(T[k]) + TC_OFFSET, DP);
             }
 
 
@@ -574,7 +578,7 @@ void get_samples() // this function talks to the amb sensor and ADC via I2C
 
             amb.readSensor(); // retrieve value from ambient temp register
             v = adc.readuV(); // retrieve microvolt sample from MCP3424
-            float ir_amb = C_TO_F(sensor.getAmbientTempCelsius());
+            //float ir_ambF = C_TO_F(sensor.getAmbientTempCelsius() + AMB_OFFSET);
             tempF = tc->Temp_F(0.001 * v, amb.getAmbF()); // convert uV to Celsius
 
             // filter on direct ADC readings, not computed temperatures
@@ -1378,10 +1382,13 @@ void setup() {
     amb.init(AMB_FILTER);  // initialize ambient temp filtering
 
     // initialize the sensor
-    while (NO_ERR != sensor.begin()) {
-        //Serial.println("Communication with device failed, please check connection");
-        delay(3000);
+#if defined USE_IBTS
+        while (NO_ERR != sensor.begin()) {
+            //Serial.println("Communication with device failed, please check connection");
+            delay(3000);
+        }
     }
+#endif
 
 #if defined LCD_PARALLEL || defined LCDAPTER || defined LCD_I2C
 #ifdef LCD_4x20
@@ -1548,12 +1555,13 @@ void setup() {
     pinMode(ENTER_BUTTON, INPUT_PULLUP);
 #endif
 
+#if defined USE_IBTS
 /**
    * set the emissivity calibration coefficient, users need to calculate the ratio of the temperature measured before the sensor changes emissivity to the true temperature of the object,
    * upload the ratio to the api as a parameter, and the deviation of the object absolute temperature measured by the sensor will be lower
    * calibrationValue new calibration coefficient, [0, 1]
    */
-    sensor.setEmissivityCorrectionCoefficient(1);
+    sensor.setEmissivityCorrectionCoefficient(0.72);
 
     /**
      * set I2C communication address, the setting takes effect after power down and restart
@@ -1578,6 +1586,8 @@ void setup() {
     delay(50);
     sensor.enterSleepMode(false);
     delay(200);
+
+#endif
 
     first = true;
     counter = 3; // start counter at 3 to match with Artisan. Probably a better way to sync with Artisan???

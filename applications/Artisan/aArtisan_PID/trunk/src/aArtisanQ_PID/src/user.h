@@ -41,6 +41,9 @@
 
 #define LCD_I2C_ADDRESS 0x27 // adjust I2C address for LCD if required. Try 0x3F, 0x20, 0x27. Not used for LCDapter.
 
+/////////////////////
+//#define USE_IBTS // Infrared Bean Temperature Sensor
+/////////////////////
 
 /////////////////////
 // Input Button Options
@@ -146,7 +149,9 @@
 // default values for systems without calibration values stored in EEPROM
 #define CAL_GAIN 1.00 // you may substitute a known gain adjustment from calibration
 #define UV_OFFSET 0 // you may substitute a known value for uV offset in ADC
-#define AMB_OFFSET -2.2 // you may substitute a known value for amb temp offset (Celsius)
+#define AMB_OFFSET -7 // you may substitute a known value for amb temp offset (Celsius)
+#define TC_OFFSET 5
+
 
 ////////////////////
 // Time Base for slow PWM on OT1, OT2
