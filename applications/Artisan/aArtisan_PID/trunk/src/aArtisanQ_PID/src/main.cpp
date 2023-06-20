@@ -198,11 +198,11 @@ void getProfileDescription(int pn);
 #include <cADC.h> // MCP3424
 
 
-#include <DFRobot_MLX90614.h>
+//#include <DFRobot_MLX90614.h>
 
 #define MLX90614_I2C_ADDR 0x5A   // mlx9614 default I2C communication address
 
-#if defined USE_IBTS
+#ifdef USE_IBTS
 DFRobot_MLX90614_I2C sensor(MLX90614_I2C_ADDR, &Wire);   // instantiate an object to drive the sensor
 #endif
 
@@ -445,9 +445,9 @@ void logger() {
             --k;
             Serial.print(F(","));
             if (k == 2) {
-#ifdef USE_IBTS
+                #ifdef USE_IBTS
                 Serial.print(convertUnits(C_TO_F(sensor.getObjectTempCelsius())), DP);
-#endif
+                #endif
             } else {
                 Serial.print(convertUnits(T[k]) + TC_OFFSET, DP);
             }
@@ -1381,13 +1381,12 @@ void setup() {
     Serial.begin(BAUD);
     amb.init(AMB_FILTER);  // initialize ambient temp filtering
 
-    // initialize the sensor
-#if defined USE_IBTS
+#ifdef USE_IBTS
+    // initialize the IBTS sensor
         while (NO_ERR != sensor.begin()) {
             //Serial.println("Communication with device failed, please check connection");
             delay(3000);
         }
-    }
 #endif
 
 #if defined LCD_PARALLEL || defined LCDAPTER || defined LCD_I2C
@@ -1561,7 +1560,7 @@ void setup() {
    * upload the ratio to the api as a parameter, and the deviation of the object absolute temperature measured by the sensor will be lower
    * calibrationValue new calibration coefficient, [0, 1]
    */
-    sensor.setEmissivityCorrectionCoefficient(0.72);
+   sensor.setEmissivityCorrectionCoefficient(0.72);
 
     /**
      * set I2C communication address, the setting takes effect after power down and restart
